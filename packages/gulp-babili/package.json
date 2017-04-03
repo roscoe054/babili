@@ -8,12 +8,9 @@
   "author": "boopathi",
   "license": "MIT",
   "main": "lib/index.js",
-  "keywords": [
-    "babel-preset",
-    "babili"
-  ],
+  "keywords": ["babel-preset", "babili"],
   "dependencies": {
-    "babel-core": "^6.25.0",
+    "babel-core": "7.0.0-alpha.12",
     "babel-preset-babili": "^0.1.4",
     "gulp-util": "^3.0.8",
     "through2": "^2.0.3",
