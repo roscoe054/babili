@@ -15,7 +15,14 @@
     "babel-preset"
   ],
   "dependencies": {
+<<<<<<< HEAD
     "babel-cli": "^6.24.1",
     "babel-preset-babili": "^0.1.4"
   }
+=======
+    "babel-preset-babili": "^0.0.12",
+    "babel-core": "^6.24.1"
+  },
+  "devDependencies": {}
+>>>>>>> 1bc8903... Node API and CLI
 }
