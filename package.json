@@ -27,13 +27,8 @@
       ".*": "<rootDir>/node_modules/babel-jest"
     },
     "testEnvironment": "node",
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/fixtures/"
-    ],
-    "roots": [
-      "packages"
-    ],
+    "testPathIgnorePatterns": ["/node_modules/", "/fixtures/"],
+    "roots": ["packages"],
     "coverageDirectory": "./coverage/"
   },
   "devDependencies": {
@@ -68,7 +63,5 @@
     "through2": "^2.0.3",
     "uglify-js": "^3.0.27"
   },
-  "workspaces": [
-    "packages/*"
-  ]
+  "workspaces": ["packages/*"]
 }
