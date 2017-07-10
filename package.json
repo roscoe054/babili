@@ -27,8 +27,12 @@
       ".*": "<rootDir>/node_modules/babel-jest"
     },
     "testEnvironment": "node",
-    "roots": ["packages"],
-    "transformIgnorePatterns": ["/node_modules/"],
+    "roots": [
+      "packages"
+    ],
+    "transformIgnorePatterns": [
+      "/node_modules/"
+    ],
     "coverageDirectory": "./coverage/"
   },
   "devDependencies": {
