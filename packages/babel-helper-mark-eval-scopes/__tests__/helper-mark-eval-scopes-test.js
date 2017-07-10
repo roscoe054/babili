@@ -10,7 +10,7 @@ function getPath(source) {
     babelrc: false,
     plugins: [
       function({ traverse }) {
-        traverse.cache.clear();
+        (traverse.clearCache || traverse.cache.clear)();
         return {
           visitor: {
             Program(programPath) {

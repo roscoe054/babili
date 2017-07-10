@@ -867,7 +867,7 @@ module.exports = ({ types: t, traverse }) => {
             } = {}
           } = {}
         ) {
-          traverse.cache.clear();
+          (traverse.clearCache || traverse.cache.clear)();
           path.scope.crawl();
 
           markEvalScopes(path);
