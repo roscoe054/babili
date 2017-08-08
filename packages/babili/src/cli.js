@@ -108,7 +108,7 @@ function printHelpInfo() {
 }
 
 function log(msg) {
-  process.stdout.write(msg);
+  process.stdout.write(msg + "\n");
   process.exit(0);
 }
 
@@ -170,21 +170,19 @@ function run(args) {
   });
 
   const files = argv["_"];
-  argv["stdin"] = argv["stdin"] || !files.length;
+  argv["stdin"] = argv["stdin"] || (!files.length && !process.stdin.isTTY);
   const errors = [];
 
   if (argv.help) {
     printHelpInfo();
-    return;
   }
 
   if (argv.V) {
     log(version);
-    return;
   }
 
   if (argv.outFile && argv.outDir) {
-    errors.push("Cannot have out-file and out-dir");
+    errors.push("Cannot have both out-file and out-dir");
   }
 
   const inputOpts = Object.keys(argv)

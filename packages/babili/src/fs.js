@@ -7,15 +7,15 @@ const EXTENSIONS = [".js", ".mjs"];
 
 module.exports.processFiles = function(fileList, options) {
   const { fileOpts, options: babiliOpts } = detachOptions(options);
-  const { stdin, outFile, outDir } = fileOpts;
+  const { stdin, outFile } = fileOpts;
   if (stdin) {
     readStdin().then(input => {
       let { code } = babili(input, babiliOpts);
-      // write to console if ouput file is not specified
+      // write to stdout if ouput file is not specified
       if (outFile === void 0) {
-        process.stdout.write(code);
+        process.stdout.write(code + "\n");
       } else {
-        fs.writeFileSync(path.resolve(outDir), code, "utf-8");
+        fs.writeFileSync(path.resolve(outFile), code, "utf-8");
       }
     });
   } else {
