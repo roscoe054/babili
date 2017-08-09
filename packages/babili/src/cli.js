@@ -209,11 +209,8 @@ async function run(args) {
     return runStdin(argv, options);
   } else if (argv._.length <= 0) {
     throw new Error("No Input");
-  } else if (argv._.length === 1) {
-    if (await isFile(argv._[0])) {
-      return runFile(argv, options);
-    }
-    return runArgs(argv, options);
+  } else if (argv._.length === 1 && (await isFile(argv._[0]))) {
+    return runFile(argv, options);
   } else {
     return runArgs(argv, options);
   }
