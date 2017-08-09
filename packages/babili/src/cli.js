@@ -1,7 +1,7 @@
 const yargsParser = require("yargs-parser");
 const optionsParser = require("./options-parser");
 const { version } = require("../package.json");
-const { handleStdin, handleFile, handleArgs } = require("./fs");
+const { handleStdin, handleFile, handleArgs, isFile } = require("./fs");
 
 const plugins = [
   "booleans",
@@ -196,7 +196,7 @@ function validate(opts) {
   );
 }
 
-function run(args) {
+async function run(args) {
   const argv = getArgv(args);
 
   // early exits
@@ -206,13 +206,16 @@ function run(args) {
   const options = getBabiliOpts(argv);
 
   if (!process.stdin.isTTY) {
-    runStdin(argv, options);
+    return runStdin(argv, options);
   } else if (argv._.length <= 0) {
     throw new Error("No Input");
   } else if (argv._.length === 1) {
-    runFile(argv, options);
+    if (await isFile(argv._[0])) {
+      return runFile(argv, options);
+    }
+    return runArgs(argv, options);
   } else {
-    runArgs(argv, options);
+    return runArgs(argv, options);
   }
 }
 
@@ -221,7 +224,7 @@ function runStdin(argv, options) {
     throw new Error("Reading input from STDIN. Cannot take file params");
   }
 
-  handleStdin(argv.outFile, options);
+  return handleStdin(argv.outFile, options);
 }
 
 function runFile(argv, options) {
@@ -229,21 +232,20 @@ function runFile(argv, options) {
 
   // prefer outFile
   if (argv.outFile) {
-    handleFile(file, argv.outFile, options);
+    return handleFile(file, argv.outFile, options);
   } else if (argv.outDir) {
-    handleFiles([file], argv.outDir, options);
+    return handleFiles([file], argv.outDir, options);
   } else {
     // prints to STDOUT
-    handleFile(file, void 0, options);
+    return handleFile(file, void 0, options);
   }
 }
 
 function runArgs(argv, options) {
-  if (argv._length <= 0) {
-    throw new Error("No Input");
-  }
-
-  handleArgs(argv._, argv.outputDir, options);
+  return handleArgs(argv._, argv.outDir, options);
 }
 
-run(process.argv.slice(2));
+run(process.argv.slice(2)).catch(e => {
+  console.error(e);
+  process.exit(1);
+});
