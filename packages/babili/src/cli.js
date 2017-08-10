@@ -53,7 +53,7 @@ const typeConsOpts = [
   "typeConstructors.string"
 ];
 
-const cliBooleanOpts = ["stdin", "help", "version"];
+const cliBooleanOpts = ["help", "version"];
 const cliOpts = ["out-file", "out-dir"];
 const alias = {
   outFile: "o",
@@ -68,7 +68,7 @@ function aliasArr(obj) {
   return r;
 }
 
-function printHelpInfo() {
+function printHelpInfo({ exitCode = 0 }) {
   const msg = `
   Usage: babili index.js [options]
 
@@ -104,12 +104,17 @@ function printHelpInfo() {
     --undefinedToVoid       Transforms undefined into void 0
     --version, -V           Prints the current version number
   `;
-  log(msg);
+  log(msg, exitCode);
 }
 
-function log(msg) {
+function log(msg, exitCode = 0) {
   process.stdout.write(msg + "\n");
-  process.exit(0);
+  process.exit(exitCode);
+}
+
+function error(err) {
+  process.stderr.write(err + "\n");
+  process.exit(1);
 }
 
 function getArgv(args) {
@@ -196,26 +201,6 @@ function validate(opts) {
   );
 }
 
-async function run(args) {
-  const argv = getArgv(args);
-
-  // early exits
-  if (argv.help) printHelpInfo();
-  if (argv.V) log(version);
-
-  const options = getBabiliOpts(argv);
-
-  if (!process.stdin.isTTY) {
-    return runStdin(argv, options);
-  } else if (argv._.length <= 0) {
-    throw new Error("No Input");
-  } else if (argv._.length === 1 && (await isFile(argv._[0]))) {
-    return runFile(argv, options);
-  } else {
-    return runArgs(argv, options);
-  }
-}
-
 function runStdin(argv, options) {
   if (argv._.length > 0) {
     throw new Error("Reading input from STDIN. Cannot take file params");
@@ -242,7 +227,24 @@ function runArgs(argv, options) {
   return handleArgs(argv._, argv.outDir, options);
 }
 
-run(process.argv.slice(2)).catch(e => {
-  process.stderr.write(e);
-  process.exit(1);
-});
+async function run(args) {
+  const argv = getArgv(args);
+
+  // early exits
+  if (argv.help) printHelpInfo();
+  if (argv.V) log(version);
+
+  const options = getBabiliOpts(argv);
+
+  if (!process.stdin.isTTY) {
+    return runStdin(argv, options);
+  } else if (argv._.length <= 0) {
+    return printHelpInfo({ exitCode: 1 });
+  } else if (argv._.length === 1 && (await isFile(argv._[0]))) {
+    return runFile(argv, options);
+  } else {
+    return runArgs(argv, options);
+  }
+}
+
+run(process.argv.slice(2)).catch(e => error(e));
