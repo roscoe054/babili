@@ -231,7 +231,7 @@ function runFile(argv, options) {
   if (argv.outFile) {
     return handleFile(file, argv.outFile, options);
   } else if (argv.outDir) {
-    return handleFiles([file], argv.outDir, options);
+    return handleArgs([file], argv.outDir, options);
   } else {
     // prints to STDOUT
     return handleFile(file, void 0, options);
@@ -243,6 +243,6 @@ function runArgs(argv, options) {
 }
 
 run(process.argv.slice(2)).catch(e => {
-  console.error(e);
+  process.stderr.write(e);
   process.exit(1);
 });

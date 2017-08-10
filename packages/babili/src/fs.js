@@ -1,7 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 const readdir = require("fs-readdir-recursive");
-const outputFileSync = require("output-file-sync");
 const promisify = require("util.promisify");
 const mkdirp = promisify(require("mkdirp"));
 
