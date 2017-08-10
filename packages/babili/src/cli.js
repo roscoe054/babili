@@ -68,7 +68,7 @@ function aliasArr(obj) {
   return r;
 }
 
-function printHelpInfo({ exitCode = 0 }) {
+function printHelpInfo({ exitCode = 0 } = {}) {
   const msg = `
   Usage: babili index.js [options]
 
